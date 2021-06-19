@@ -1,6 +1,7 @@
 const express = require('express');
 const http = require("http");
 
+//port 3000 is for local host
 const PORT = process.env.PORT || 3000;
 
 const app = express();
