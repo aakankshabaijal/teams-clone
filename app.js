@@ -22,15 +22,30 @@ io.on('connection', (socket) => {
     console.log(connectedPeers);
 
     socket.on('pre-offer', (data) => {
-        console.log("pre-offer-came");
-        console.log(data);
+        console.log('pre-offer came');
+        const { calleePersonalCode, callType } = data;
+
+        const connectedPeer = connectedPeers.find((peerSocketID) =>
+            peerSocketID === calleePersonalCode
+        );
+
+        console.log(connectedPeer);
+
+        if (connectedPeer) {
+            const data = {
+                callerSocketID: socket.id,
+                callType,
+            };
+
+            io.to(calleePersonalCode).emit('pre-offer', data);
+        }
     });
 
     socket.on('disconnect', () => {
         console.log("user disconnected");
 
         const newConnectedPeers = connectedPeers.filter((peerSocketID) => {
-            peerSocketID !== socket.id;
+            return peerSocketID !== socket.id;
         });
 
         connectedPeers = newConnectedPeers; //only active users will be in the array
