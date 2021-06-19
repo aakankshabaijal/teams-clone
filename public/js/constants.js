@@ -1,0 +1,5 @@
+export const callType = {
+    CHAT_PERSONAL_CODE: 'CHAT_PERSONAL_CODE',
+    VIDEO_PERSONAL_CODE: 'VIDEO_PERSONAL_CODE',
+
+};
