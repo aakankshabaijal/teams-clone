@@ -33,11 +33,43 @@ io.on('connection', (socket) => {
 
         if (connectedPeer) {
             const data = {
-                callerSocketID: socket.id,
+                callerSocketId: socket.id,
                 callType,
             };
 
             io.to(calleePersonalCode).emit('pre-offer', data);
+        }
+        else {
+            const data = {
+                preOfferAnswer: "CALLEE_NOT_FOUND",
+            };
+            io.to(socket.id).emit('pre-offer-answer', data);
+        }
+    });
+
+    socket.on('pre-offer-answer', (data) => {
+        console.log("pre offer answer came");
+
+        console.log(data);
+
+        const connectedPeer = connectedPeers.find((peerSocketID) =>
+            peerSocketID === data.callerSocketId
+        );
+        if (connectedPeer) {
+            io.to(data.callerSocketId).emit("pre-offer-answer", data);
+        }
+    });
+
+    socket.on('webRTC-signaling', (data) => {
+        const { connectedUserSocketId } = data;
+
+
+        const connectedPeer = connectedPeers.find((peerSocketID) =>
+            peerSocketID === connectedUserSocketId
+        );
+
+        if (connectedPeer) {
+            io.to(connectedUserSocketId).emit('webRTC-signaling', data);
         }
     });
 
