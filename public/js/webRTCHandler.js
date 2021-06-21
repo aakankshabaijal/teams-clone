@@ -5,6 +5,7 @@ import * as store from './store.js';
 
 let connectedUserDetails;
 let peerConnection;
+let dataChannel;
 
 const defaultConstraints = {
     audio: true,
@@ -34,12 +35,34 @@ export const getLocalPreview = () => {
 const createPeerConnection = () => {
     peerConnection = new RTCPeerConnection(configuration);
 
+    //data channel for sending messages in chat call
+    dataChannel = peerConnection.createDataChannel('chat');
+
+    peerConnection.ondatachannel = (event) => {
+        const dataChannel = event.channel;
+
+        dataChannel.onopen = () => {
+            console.log('peer connection is ready to receive data channel messages');
+        };
+
+        dataChannel.onmessage = (event) => {
+            const message = JSON.parse(event.data);
+        };
+    };
+
+
+
     peerConnection.onicecandidate = (event) => {
         console.log('getting ice candidates from stun server');
         if (event.candidate) {
             //send our ice candidates to other peer
+            wss.sendDataUsingWebRTCSignaling({
+                connectedUserSocketId: connectedUserDetails.socketId,
+                type: constants.webRTCSignaling.ICE_CANDIDATE,
+                candidate: event.candidate
+            });
         }
-    }
+    };
 
 
     peerConnection.onconnectionstatechange = (event) => {
@@ -70,7 +93,10 @@ const createPeerConnection = () => {
     }
 };
 
-
+export const sendMessageUsingDataChannel = (message) => {
+    const stringifiedMessage = JSON.stringify(message);
+    dataChannel.send(stringifiedMessage);
+};
 
 export const sendPreOffer = (callType, calleePersonalCode) => {
     //console.log("pre offer function executed");
@@ -179,7 +205,80 @@ const sendWebRTCOffer = async () => {
     });
 };
 
-export const handleWebRTCOffer = (data) => {
-    console.log('webRTC offer came');
-    console.log(data);
+//exchanging SDP information
+export const handleWebRTCOffer = async (data) => {
+    await peerConnection.setRemoteDescription(data.offer);
+    const answer = await peerConnection.createAnswer();
+    await peerConnection.setLocalDescription(answer);
+    wss.sendDataUsingWebRTCSignaling({
+        connectedUserSocketId: connectedUserDetails.socketId,
+        type: constants.webRTCSignaling.ANSWER,
+        answer: answer
+    });
+};
+
+export const handleWebRTCAnswer = async (data) => {
+    console.log('handling webRTC answer');
+    await peerConnection.setRemoteDescription(data.answer);
+};
+
+export const handleWebRTCCandidate = async (data) => {
+    console.log('handling incoming webRTC candidates');
+    try {
+        await peerConnection.addIceCandidate(data.candidate);
+
+    } catch (err) {
+        console.error('error occured when trying to add received ice candidate',
+            err);
+    }
+};
+
+let screenSharingStream;
+
+export const switchBetweenCameraAndScreenSharing = async (screenSharingActive) => {
+    if (screenSharingActive) {
+        const localStream = store.getState().localStream;
+        const senders = peerConnection.getSenders();
+        const sender = senders.find((sender) => {
+            return (sender.track.kind === localStream.getVideoTracks()[0].kind);
+        });
+
+        if (sender) {
+            sender.replaceTrack(localStream.getVideoTracks()[0]);
+        }
+
+        //stop screen sharing stream, popup saying that 'you are sharing your screen' will also disapper
+        store.getState().screenSharingStream.getTracks().forEach((track) => track.stop());
+
+
+        store.setScreenSharingActive(!screenSharingActive);
+        ui.updateLocalVideo(localStream);
+
+
+    } else {
+        console.log('switching for screen sharing');
+        try {
+            screenSharingStream = await navigator.mediaDevices.getDisplayMedia({
+                video: true
+            });
+
+            store.setScreenSharingStream(screenSharingStream);
+            const senders = peerConnection.getSenders();
+            //replace video track with screen share
+
+            const sender = senders.find((sender) => {
+                return (sender.track.kind === screenSharingStream.getVideoTracks()[0].kind);
+            });
+
+            if (sender) {
+                sender.replaceTrack(screenSharingStream.getVideoTracks()[0]);
+            }
+
+            store.setScreenSharingActive(!screenSharingActive);
+
+            ui.updateLocalVideo(screenSharingStream);
+        } catch (err) {
+            console.error('error occured when trying to get screen sharing stream', err);
+        }
+    }
 };
