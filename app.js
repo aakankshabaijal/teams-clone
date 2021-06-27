@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 3000;
 
 const app = express();
 const server = http.createServer(app); // express is used here to create our server
-const io = require("socket.io")(server);
+const io = require("socket.io")(server);//using the socket.io library
 app.use(express.static("public")); // all files in public folder should be accessible outside the server
 //defining routes, request and response
 
