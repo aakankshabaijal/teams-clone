@@ -1,3 +1,7 @@
+import * as store from './store.js';
+
+//in one call we can record only once
+
 let mediaRecorder;
 
 const vp9Codec = 'video/webm;codecs=vp9';
