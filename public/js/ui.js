@@ -16,6 +16,15 @@ export const updateLocalVideo = (stream) => {
     });
 };
 
+//when we are able to get local stream from camera only then the option to video call will be available
+//if some error occurs in getting the local stream we will not be able to do a video call
+
+export const showVideoCallButtons = () => {
+    const personalCodeVideoButton = document.getElementById('personal_code_video_button');
+    showElement(personalCodeVideoButton);
+    console.log('getting local stream correctly');
+}
+
 export const updateRemoteVideo = (stream) => {
     const remoteVideo = document.getElementById('remote_video');
     remoteVideo.srcObject = stream;
@@ -242,4 +251,5 @@ const showElement = (element) => {
         element.classList.remove('display_none');
     }
 };
+
 

@@ -38,7 +38,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  
 }
 
 .dashboard_container {
@@ -451,7 +450,7 @@ body {
   left: 0;
   top: 0;
   background: rgba(196, 196, 196, 0.2);
-  backdrop-filter: blur(80px);
+  filter: blur(25px);
 }
 
 .video_recording_buttons_container {
