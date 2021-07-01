@@ -43,7 +43,7 @@ body {
 .dashboard_container {
   width: 25%;
   height: 100%;
-  background: linear-gradient(168.68deg, #0052c9 1.12%, #0a91db 100%);
+  background: linear-gradient(168.68deg, #4b87f8, #5453f3);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -63,25 +63,26 @@ body {
   flex-direction: column;
 }
 
-.logo_container {
-  margin-left: 40px;
-  width: 180px;
-  height: 120px;
+.logo_container img {
+  max-width: 50%;
+  height: auto;
+  margin-left: 22.5%;
+  margin-top: 5%;
 }
 
 .description_container {
-  margin: 0 40px;
+  margin: 0 10%;
 }
 
 .description_container_paragraph {
   font-weight: 500;
-  font-size: 16px;
+  font-size: 1em;
   color: white;
 }
 
 .personal_code_container {
   height: 110px;
-  margin: 0 40px;
+  margin: 0 10%;
   background: rgba(196, 196, 196, 0.2);
   backdrop-filter: blur(80px);
   border-radius: 15px;
@@ -95,20 +96,25 @@ body {
 }
 
 .personal_code_title_paragraph {
-  font-size: 16px;
+  font-size: 1em;
   font-weight: 500;
+  text-align: left;
 }
 
 .personal_code_value_container {
   display: flex;
-  justify-content: space-between;
-  margin: 0 25px;
+  flex-direction: row;
+  justify-content: space-around;
+  margin: 0 5%;
   align-items: center;
 }
 
 .personal_code_value_paragraph {
-  font-size: 18px;
+  font-size: 0.8em;
   font-weight: 700;
+  margin: 2.5%;
+  flex-wrap: wrap;
+  margin: 0 0;
 }
 
 .personal_code_copy_button {
@@ -117,21 +123,26 @@ body {
   border-radius: 8px;
   background: white;
   transition: 0.5s;
+  margin-left: 5%;
+  margin-bottom: 2.5%;
+  align-items: right;
 }
 
 .personal_code_connecting_container {
   display: flex;
   flex-direction: column;
-  margin: 0 40px;
+  margin: 10%;
 }
 
 .personal_code_connecting_paragraph {
   font-weight: 500;
-  font-size: 18px;
+  margin-bottom: 2.5%;
+  font-size: 1em;
 }
 
 .personal_code_connecting_input_container {
-  width: 100%;
+  width: 90%;
+  margin: 0 0;
   height: 40px;
 }
 
@@ -140,7 +151,7 @@ body {
 }
 
 .personal_code_input {
-  width: 90%;
+  width: 95%;
   height: 100%;
   background: rgba(196, 196, 196, 0.2);
   backdrop-filter: blur(80px);
@@ -151,9 +162,10 @@ body {
 }
 
 .personal_code_connecting_buttons_container {
-  margin-top: 30px;
+  margin-top: 10%;
   display: flex;
   justify-content: space-between;
+  margin-bottom: 10%;
 }
 
 .connecting_button {
@@ -165,47 +177,6 @@ body {
   transition: 0.5s;
 }
 
-.stranger_connecting_container {
-  display: flex;
-  flex-direction: column;
-  margin: 0 40px;
-}
-
-.stranger_title_container {
-  font-weight: 500;
-  font-size: 18px;
-}
-
-.stranger_buttons_container {
-  display: flex;
-  justify-content: space-between;
-}
-
-.checkbox_container {
-  display: flex;
-  margin: 0 40px;
-  margin-bottom: 25px;
-  align-items: center;
-}
-
-.checkbox_connection {
-  width: 30px;
-  height: 30px;
-  background: rgba(196, 196, 196, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 8px;
-  backdrop-filter: blur(80px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.checkbox_container_paragraph {
-  font-weight: 500;
-  font-size: 16px;
-  margin-left: 15px;
-}
-
 .connecting_buttons_image {
   max-width: 100%;
   max-height: 100%;
@@ -215,7 +186,7 @@ body {
   position: relative;
 }
 .new_message_input {
-  margin: 0 40px;
+  margin: 0 5%;
   margin-bottom: 30px;
   width: calc(100% - 80px);
   height: 60px;
@@ -262,10 +233,10 @@ body {
 }
 
 .message_right_paragraph {
-  background: linear-gradient(168.68deg, #0052c9 1.12%, #0a91db 100%);
+  background: linear-gradient(168.68deg, #4b87f8, #5453f3);
   border: 1px solid #d5deeb;
-  border-radius: 8px 8px 8px 0px;
-  padding: 20px 13px;
+  border-radius: 1% 1% 1% 0;
+  padding: 5% 2.5%;
   color: #ffffff;
   min-width: 60px;
 }
@@ -292,7 +263,7 @@ body {
   height: calc(100% - 70px);
   margin: 30px 40px 40px 40px;
   border-radius: 15px;
-  background: linear-gradient(168.68deg, #0052c9 1.12%, #0a91db 100%);
+  background: linear-gradient(168.68deg, #4b87f8, #5453f3);
   /* background-image: url('../utils/images/logo.png'); */
 }
 
@@ -304,10 +275,15 @@ body {
   height: 100%;
 }
 
+.videos_placeholder img {
+  width: 50%;
+  height: auto;
+}
+
 .local_video_container {
   position: absolute;
-  width: 180px;
-  height: 180px;
+  width: 25%;
+  height: 25%;
   border: 2px solid rgba(255, 255, 255, 0.5);
   border-radius: 15px;
   background: rgba(196, 196, 196, 0.2);
