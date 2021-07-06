@@ -16,12 +16,11 @@ export const updateLocalVideo = (stream) => {
     });
 };
 
-//when we are able to get local stream from camera only then the option to video call will be available
-//if some error occurs in getting the local stream we will not be able to do a video call
+//when we are able to get local stream from camera only then the option to video call will 
+//be available.if some error occurs in getting the local stream we will not be able to
+//do a video call
 
 export const showVideoCallButtons = () => {
-    const personalCodeVideoButton = document.getElementById('personal_code_video_button');
-    showElement(personalCodeVideoButton);
     console.log('getting local stream correctly');
 }
 
@@ -34,8 +33,10 @@ export const updateRemoteVideo = (stream) => {
 
 
 export const showIncomingCallDialog = (callType, acceptCallHandler, rejectCallHandler) => {
-    const callTypeInfo = callType === constants.callType.CHAT_PERSONAL_CODE ? "Chat" : "Video";
-    const incomingCallDialog = elements.getIncomingCallDialog(callTypeInfo, acceptCallHandler, rejectCallHandler);
+    const callTypeInfo = callType === constants.callType.CHAT_PERSONAL_CODE ? 
+        "Chat" : "Video";
+    const incomingCallDialog = 
+        elements.getIncomingCallDialog(callTypeInfo, acceptCallHandler, rejectCallHandler);
 
     //removing all dialogs inside HTML dialog element
     const dialog = document.getElementById('dialog');
@@ -62,10 +63,7 @@ export const showInfoDialog = (preOfferAnswer) => {
         infoDialog = elements.getInfoDialog('Callee not found', 'Please check personal code');
     }
 
-    if (preOfferAnswer === constants.preOfferAnswer.CALL_UNAVAILABLE) {
-        infoDialog = elements.getInfoDialog('Call is not possible', 'Probably callee is busy. Please try again later');
-    }
-
+    
     if (infoDialog) {
         const dialog = document.getElementById('dialog');
         dialog.appendChild(infoDialog);
@@ -96,14 +94,15 @@ export const showCallElements = (callType) => {
 
 };
 
-const showChatCallElements = () => {
-    const finishConnectionChatButtonContainer = document.getElementById('finish_chat_button_container');
-    showElement(finishConnectionChatButtonContainer);
-
+export const showChatCallElements = () => {
+    const finishConnectionChatButtonContainer = 
+    document.getElementById('finish_chat_button_container');
+    
+    const videoCallButton = document.getElementById('personal_code_video_button');
+    showElement(videoCallButton);
     const newMessageInput = document.getElementById('new_message');
     showElement(newMessageInput);
-    //block panel
-    disableDashboard();
+    
 };
 
 const showVideoCallElements = () => {
@@ -115,12 +114,11 @@ const showVideoCallElements = () => {
 
     const remoteVideo = document.getElementById('remote_video');
     showElement(remoteVideo);
+    remoteVideo.muted = false;
 
     const newMessageInput = document.getElementById('new_message');
     showElement(newMessageInput);
-    //block panel
-    disableDashboard();
-
+    
 }
 
 
@@ -145,7 +143,8 @@ export const updateCameraButton = (cameraActive) => {
 // ui messages
 export const appendMessage = (message, right = false) => {
     const messageContainer = document.getElementById('messages_container');
-    const messageElement  = right ? elements.getRightMessage(message) : elements.getLeftMessage(message) ;
+    const messageElement  = right ? elements.getRightMessage(message) : 
+        elements.getLeftMessage(message) ;
     messageContainer.appendChild(messageElement);
 };
 
@@ -188,6 +187,30 @@ export const switchRecordingButtons = (switchForResumeButton = false) => {
 };
 
 // ui after hang up
+function muteMe(elem) {
+    elem.muted = true;
+    elem.pause();
+}
+function mutePage() {
+    var elems = document.querySelectorAll("video, audio");
+
+    [].forEach.call(elems, function(elem) { muteMe(elem); });
+}
+
+export const videoCallEnded = () => {
+    const remoteVideo = document.getElementById('remote_video');
+    
+    hideElement(remoteVideo);
+    muteMe(remoteVideo);
+
+    const callButtons = document.getElementById('call_buttons');
+    hideElement(callButtons);
+
+    const placeholder = document.getElementById('video_placeholder');
+    showElement(placeholder);
+
+    
+}
 
 export const updateUIAfterHangUp = (callType) => {
     enableDashboard();
@@ -216,7 +239,8 @@ export const updateUIAfterHangUp = (callType) => {
     const placeholder = document.getElementById('video_placeholder');
     showElement(placeholder);
 
-    
+    const videoCallButton = document.getElementById('personal_code_video_button');
+    hideElement(videoCallButton);
 
     removeAllDialogs();
 
@@ -240,16 +264,22 @@ const disableDashboard = () => {
     }
 };
 
-const hideElement = (element) => {
-    if (!element.classList.contains('display_none')) {
-        element.classList.add('display_none');
+export const hideElement = (element) => {
+    if(element) {
+        if (!element.classList.contains('display_none')) {
+            element.classList.add('display_none');
+        }
     }
+    
 };
 
-const showElement = (element) => {
-    if (element.classList.contains('display_none')) {
-        element.classList.remove('display_none');
+export const showElement = (element) => {
+    if(element) {
+        if (element.classList.contains('display_none')) {
+            element.classList.remove('display_none');
+        }
     }
+    
 };
 
 

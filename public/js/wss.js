@@ -26,7 +26,12 @@ export const registerSocketEvents = (socket) => {
 
     socket.on('user-hanged-up', () => {
         webRTCHandler.handleConnectedUserHangedUp();
+        ui.videoCallEnded();
     });
+
+    socket.on('end-connection', () => {
+        webRTCHandler.closePeerConnectionAndResetState();
+    })
 
     socket.on('webRTC-signaling', (data) => {
         switch (data.type) {
@@ -59,4 +64,8 @@ export const sendDataUsingWebRTCSignaling = (data) => {
 
 export const senduserHangedUp = (data) => {
     socketIO.emit('user-hanged-up', data);
+};
+
+export const endConnection = (data) => {
+    socketIO.emit('end-connection', data);
 };

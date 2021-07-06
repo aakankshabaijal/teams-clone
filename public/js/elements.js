@@ -1,3 +1,5 @@
+import * as constants from './constants.js';
+
 export const getIncomingCallDialog = (callTypeInfo, acceptCallHandler, rejectCallHandler) => {
     console.log('getting incoming call dialog');
 
@@ -9,7 +11,13 @@ export const getIncomingCallDialog = (callTypeInfo, acceptCallHandler, rejectCal
     dialog.appendChild(dialogContent);
     const title = document.createElement('p');
     title.classList.add('dialog_title');
-    title.innerHTML = `Incoming ${callTypeInfo} Call`;
+    if(callTypeInfo === constants.callType.VIDEO_PERSONAL_CODE) {
+        title.innerHTML = `Incoming ${callTypeInfo} Call`;
+    }
+    else {
+        title.innerHTML = "Incoming Request";
+    }
+    
 
     const imageContainer = document.createElement('div');
     imageContainer.classList.add('dialog_image_container');
@@ -74,13 +82,13 @@ export const getCallingDialog = (rejectCallHandler) => {
     const buttonContainer = document.createElement('div');
     buttonContainer.classList.add('dialog_button_container');
 
-    const hangUpCallButton = document.createElement('button');
-    hangUpCallButton.classList.add('dialog_reject_call_button');
-    const hangUpCallImg = document.createElement('img');
-    hangUpCallImg.classList.add('dialog_button_image');
-    hangUpCallImg.src = "./utils/images/rejectCall.png";
-    hangUpCallButton.append(hangUpCallImg);
-    buttonContainer.appendChild(hangUpCallButton);
+    // const hangUpCallButton = document.createElement('button');
+    // hangUpCallButton.classList.add('dialog_reject_call_button');
+    // const hangUpCallImg = document.createElement('img');
+    // hangUpCallImg.classList.add('dialog_button_image');
+    // hangUpCallImg.src = "./utils/images/rejectCall.png";
+    // hangUpCallButton.append(hangUpCallImg);
+    // buttonContainer.appendChild(hangUpCallButton);
 
 
 
@@ -88,9 +96,9 @@ export const getCallingDialog = (rejectCallHandler) => {
     dialogContent.appendChild(imageContainer);
     dialogContent.appendChild(buttonContainer);
 
-    hangUpCallButton.addEventListener('click', () => {
-        rejectCallHandler();
-    });
+    // hangUpCallButton.addEventListener('click', () => {
+    //     rejectCallHandler();
+    // });
     return dialog;
 }
 

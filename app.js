@@ -85,6 +85,18 @@ io.on('connection', (socket) => {
         }
     });
 
+    socket.on('end-connection', (data) => {
+        const { connectedUserSocketId } = data;
+
+        const connectedPeer = connectedPeers.find((peerSocketID) =>
+            peerSocketID === connectedUserSocketId
+        );
+
+        if (connectedPeer) {
+            io.to(connectedUserSocketId).emit('end-connection');
+        }
+    });
+
     socket.on('disconnect', () => {
         console.log("user disconnected");
 

@@ -6,6 +6,8 @@ import * as store from './store.js';
 let connectedUserDetails;
 let peerConnection;
 let dataChannel;
+let senderVideo;
+let userStream;
 
 const defaultConstraints = {
     audio: true,
@@ -24,7 +26,7 @@ export const getLocalPreview = () => {
     navigator.mediaDevices.getUserMedia(defaultConstraints)
         .then((stream) => {
             ui.updateLocalVideo(stream);
-            ui.showVideoCallButtons();
+            //ui.showVideoCallButtons();
             store.setCallState(constants.callState.CALL_AVAILABLE);
             store.setLocalStream(stream);
         }).catch((err) => {
@@ -61,11 +63,15 @@ const createPeerConnection = () => {
         console.log('getting ice candidates from stun server');
         if (event.candidate) {
             //send our ice candidates to other peer
-            wss.sendDataUsingWebRTCSignaling({
-                connectedUserSocketId: connectedUserDetails.socketId,
-                type: constants.webRTCSignaling.ICE_CANDIDATE,
-                candidate: event.candidate
-            });
+            if(connectedUserDetails) {
+                wss.sendDataUsingWebRTCSignaling({
+                
+                    connectedUserSocketId: connectedUserDetails.socketId,
+                    type: constants.webRTCSignaling.ICE_CANDIDATE,
+                    candidate: event.candidate
+                });
+            }
+            
         }
     };
 
@@ -91,9 +97,10 @@ const createPeerConnection = () => {
 
     if (connectedUserDetails.callType === constants.callType.VIDEO_PERSONAL_CODE) {
         const localStream = store.getState().localStream;
+        userStream = localStream;
 
         for (const track of localStream.getTracks()) {
-            peerConnection.addTrack(track, localStream);
+            senderVideo = peerConnection.addTrack(track, localStream);
         }
     }
 };
@@ -260,8 +267,8 @@ export const handleWebRTCCandidate = async (data) => {
         await peerConnection.addIceCandidate(data.candidate);
 
     } catch (err) {
-        console.error('error occured when trying to add received ice candidate',
-            err);
+        //console.error('error occured when trying to add received ice candidate',
+            //err);
     }
 };
 
@@ -317,22 +324,70 @@ export const switchBetweenCameraAndScreenSharing = async (screenSharingActive) =
 
 // end call with hang up
 
-export const handleHangUp = () => {
-    console.log('finishing the call');
+export const onlyVideoHangUp = () => {
+    
+
+    //const remoteStream = store.getState().getVideoTracks()
     const data = {
         connectedUserSocketId: connectedUserDetails.socketId
     };
 
     wss.senduserHangedUp(data);
+    store.getState().localStream.getVideoTracks()[0].enabled = true;
+        store.getState().localStream.getAudioTracks()[0].enabled = true;
+    // var senders = peerConnection.getSenders();
+    // const localStream = store.getState().localStream;
+    //closePeerConnectionAndResetState();
+    //store.getState().localStream.getAudioTracks()[0].enabled = false;
+    // function muteMe(elem) {
+    //     elem.muted = true;
+    //     elem.pause();
+    // }
+    // function mutePage() {
+    //     var elems = document.querySelectorAll("video, audio");
+    
+    //     [].forEach.call(elems, function(elem) { muteMe(elem); });
+    // }
+
+    var audioTrack = userStream.getAudioTracks()[0];
+ 
+    if (audioTrack.length > 0) {
+ 
+        userStream.removeTrack(audioTrack[0]);
+    }
+
+    ui.videoCallEnded();
+   
+}
+
+export const handleHangUp = () => {
+    console.log('finishing the call');
+    if(connectedUserDetails) {
+        const data = {
+            connectedUserSocketId: connectedUserDetails.socketId
+        };
+        wss.endConnection(data);
+    }
+    
+    
+    
+    
     closePeerConnectionAndResetState();
+    
 };
 
 export const handleConnectedUserHangedUp = () => {
     console.log('connected peer hanged up');
-    closePeerConnectionAndResetState();
+    
+    //not able to exceute this line
+    //if(connectedUserDetails.callType === constants.callType.CHAT_PERSONAL_CODE) {
+        //closePeerConnectionAndResetState(); 
+    //}
+    //closePeerConnectionAndResetState();
 };
 
-const closePeerConnectionAndResetState = () => {
+export const closePeerConnectionAndResetState = () => {
+    console.log('close peer connection and reset state');
     if(peerConnection)
     {
         peerConnection.close();
@@ -340,28 +395,20 @@ const closePeerConnectionAndResetState = () => {
     }
 
     // active mic and camera
-
-    if(connectedUserDetails.callType === constants.callType.VIDEO_PERSONAL_CODE) {
-        store.getState().localStream.getVideoTracks()[0].enabled = true;
-        store.getState().localStream.getAudioTracks()[0].enabled = true;      
+    if(connectedUserDetails) {
+        if(connectedUserDetails.callType === constants.callType.VIDEO_PERSONAL_CODE) {
+            store.getState().localStream.getVideoTracks()[0].enabled = true;
+            store.getState().localStream.getAudioTracks()[0].enabled = true;      
+        }
+        ui.updateUIAfterHangUp(connectedUserDetails.callType);
+        setIncomingCallsAvailable();
+        connectedUserDetails = null;
     }
-    ui.updateUIAfterHangUp(connectedUserDetails.callType);
-    setIncomingCallsAvailable();
-    connectedUserDetails = null;
+    
 }
 
 const checkCallPossibility = (callType) => {
-    const callState = store.getState().callState;
-
-    if(callState === constants.callState.CALL_AVAILABLE) {
-        return true;
-    }
-
-    if( (callType === constants.callType.VIDEO_PERSONAL_CODE) && (callState === constants.callState.CALL_AVAILABLE_ONLY_CHAT)) {
-        return false;
-    }
-
-    return false;
+    return true;
 };
 
 

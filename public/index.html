@@ -28,8 +28,10 @@
                     </div>
                 </div>
             </div>
+            <br>
             <div class="personal_code_connecting_container">
-                <label for="personal_code_input" class="personal_code_connecting_paragraph">Personal Code</label>
+                <label for="personal_code_input" class="personal_code_connecting_paragraph">Enter your friend's
+                    code</label>
                 <div class="personal_code_connecting_input_container">
                     <input type="text" class="personal_code_input" id="personal_code_input">
                 </div>
@@ -37,9 +39,10 @@
                     <button class="connecting_button" id="personal_code_chat_button">
                         <img src="./utils/images/chatButton.png" alt="" class="connecting_buttons_image">
                     </button>
-                    <button class="connecting_button display_none" id="personal_code_video_button">
-                        <img src="./utils/images/videoButton.png" alt="" class="connecting_buttons_image">
+                    <button class="connecting_button" id="end_connection_button">
+                        <img src="./utils/images/endConnectionButton.png" alt="" class="connecting_buttons_image">
                     </button>
+
                 </div>
                 <div class="dashboard_blur display_none" id="dashboard_blur"></div>
             </div>
@@ -70,11 +73,7 @@
                         <img src="./utils/images/recordingStart.png" alt="">
                     </button>
                 </div>
-                <div class="finish_chat_button_container display_none" id="finish_chat_button_container">
-                    <button class="call_button_large" id="finish_chat_call_button">
-                        <img src="./utils/images/hangUp.png" alt="">
-                    </button>
-                </div>
+
                 <div class="video_recording_buttons_container display_none" id="video_recording_buttons">
                     <button id="pause_recording_button">
                         <img src="./utils/images/pause.png" alt="">
@@ -89,7 +88,17 @@
             </div>
         </div>
         <div class="messenger_container">
-            <div class="messages_container" id="messages_container"></div>
+            <button class="connecting_button display_none" id="personal_code_video_button">
+                <img src="./utils/images/videoButton.png" alt="" class="connecting_buttons_image">
+            </button>
+            <div class="messages_container" id="messages_container">
+
+                <div class="finish_chat_button_container display_none" id="finish_chat_button_container">
+                    <button class="call_button_large" id="finish_chat_call_button">
+                        <img src="./utils/images/hangUp.png" alt="">
+                    </button>
+                </div>
+            </div>
             <div class="new_message_container display_none" id="new_message">
                 <input type="text" class="new_message_input" id="new_message_input"
                     placeholder="Type your message here...">

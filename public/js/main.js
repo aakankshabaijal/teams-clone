@@ -22,7 +22,7 @@ personalCodeCopyButton.addEventListener('click', () => {
 
 const personalCodeChatButton = document.getElementById("personal_code_chat_button");
 const personalCodeVideoButton = document.getElementById("personal_code_video_button");
-
+const endConnectionButton = document.getElementById("end_connection_button");
 
 personalCodeChatButton.addEventListener('click', () => {
     console.log('chat button clicked');
@@ -38,6 +38,14 @@ personalCodeVideoButton.addEventListener('click', () => {
     const calleePersonalCode = document.getElementById("personal_code_input").value;
     const callType = constants.callType.VIDEO_PERSONAL_CODE;
     webRTCHandler.sendPreOffer(callType, calleePersonalCode);
+});
+
+endConnectionButton.addEventListener('click', () => {
+    console.log('end connection button clicked');
+    webRTCHandler.handleHangUp();
+    //webRTCHandler.closePeerConnectionAndResetState();
+    
+    
 });
 
 //event listeners for video call buttons
@@ -121,10 +129,12 @@ resumeRecordingButton.addEventListener('click', () => {
 
 const hangUpButton = document.getElementById('hang_up_button');
 hangUpButton.addEventListener('click', () => {
-    webRTCHandler.handleHangUp();
+    webRTCHandler.onlyVideoHangUp();
+    //ui.videoCallEnded();
 });
 
 const hangUpChatButton = document.getElementById('finish_chat_call_button');
 hangUpChatButton.addEventListener('click', () => {
     webRTCHandler.handleHangUp();
+    //webRTCHandler.close
 });
