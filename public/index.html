@@ -1,126 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <link rel="stylesheet" href="css/style.css">
+  <head>
+    <link rel="stylesheet" href="css/style.css" />
     <title>Teams</title>
-    <link rel="shortcut icon" type="image/jpg" href="./utils/images/logo.png">
+    <link rel="shortcut icon" type="image/jpg" href="./utils/images/logo.png" />
+  </head>
 
-</head>
+  <!--The body is divided into 3 sections : dashboard, video container and messages panel-->
 
-<body>
+  <body>
     <div class="main_container">
-        <div class="dashboard_container">
-            <div class="logo_container"><img src="./utils/images/logo.png" alt="logo"></div>
-            <div>
-                <div class="description_container">
-                    <p class="description_container_paragraph">Connect with people by entering their personal code</p>
-                </div>
-                <div class="personal_code_container">
-                    <div class="personal_code_title_container">
-                        <p class="personal_code_title_paragraph">Your personal code</p>
-                    </div>
-                    <div class="personal_code_value_container">
-                        <p class="personal_code_value_paragraph" id="personal_code_paragraph">dummy</p>
-                        <button class="personal_code_copy_button" id="personal_code_copy_button">
-                            <img src="./utils/images/copyButton.png" alt="">
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <br>
-            <div class="personal_code_connecting_container">
-                <label for="personal_code_input" class="personal_code_connecting_paragraph">Enter your friend's
-                    code</label>
-                <div class="personal_code_connecting_input_container">
-                    <input type="text" class="personal_code_input" id="personal_code_input">
-                </div>
-                <div class="personal_code_connecting_buttons_container">
-                    <button class="connecting_button" id="personal_code_chat_button">
-                        <img src="./utils/images/chatButton.png" alt="" class="connecting_buttons_image">
-                    </button>
-                    <button class="connecting_button" id="end_connection_button">
-                        <img src="./utils/images/endConnectionButton.png" alt="" class="connecting_buttons_image">
-                    </button>
 
-                </div>
-                <div class="dashboard_blur display_none" id="dashboard_blur"></div>
-            </div>
+        <!--Dashboard container-->
+      <div class="dashboard_container">
+        <div class="logo_container">
+          <img src="./utils/images/logo.png" alt="logo" />
         </div>
-        <div class="call_container">
-            <div class="videos_container">
-                <div id="video_placeholder" class="videos_placeholder">
-                    <img src="./utils/images/logo.png" alt="">
-                </div>
-                <video class="remote_video display_none" autoplay id="remote_video"></video>
-                <div class="local_video_container">
-                    <video class="local_video" id="local_video" muted autoplay></video>
-                </div>
-                <div class="call_buttons_container display_none" id="call_buttons">
-                    <button class="call_button_small" id="mic_button">
-                        <img src="./utils/images/mic.png" id="mic_button_image" alt="">
-                    </button>
-                    <button class="call_button_small" id="camera_button">
-                        <img src="./utils/images/camera.png" id="camera_button_image" alt="">
-                    </button>
-                    <button class="call_button_large" id="hang_up_button">
-                        <img src="./utils/images/hangUp.png" alt="">
-                    </button>
-                    <button class="call_button_small" id="screen_sharing_button">
-                        <img src="./utils/images/switchCameraScreenSharing.png" alt="">
-                    </button>
-                    <button class="call_button_small" id="start_recording_button">
-                        <img src="./utils/images/recordingStart.png" alt="">
-                    </button>
-                </div>
-
-                <div class="video_recording_buttons_container display_none" id="video_recording_buttons">
-                    <button id="pause_recording_button">
-                        <img src="./utils/images/pause.png" alt="">
-                    </button>
-                    <button id="resume_recording_button" class="display_none">
-                        <img src="./utils/images/resume.png" alt="">
-                    </button>
-                    <button id="stop_recording_button">
-                        Stop Recording
-                    </button>
-                </div>
+        <div>
+          <div class="description_container">
+            <p class="description_container_paragraph">
+              Connect with people by entering their personal code
+            </p>
+          </div>
+          <div class="personal_code_container">
+            <div class="personal_code_title_container">
+              <p class="personal_code_title_paragraph">Your personal code</p>
             </div>
+            <div class="personal_code_value_container">
+              <p
+                class="personal_code_value_paragraph"
+                id="personal_code_paragraph"
+              >
+                dummy
+              </p>
+              <button
+                class="personal_code_copy_button"
+                id="personal_code_copy_button"
+              >
+                <img src="./utils/images/copyButton.png" alt="" />
+              </button>
+            </div>
+          </div>
         </div>
-        <div class="messenger_container">
-            <button class="connecting_button display_none" id="personal_code_video_button">
-                <img src="./utils/images/videoButton.png" alt="" class="connecting_buttons_image">
+        <br />
+        <div class="personal_code_connecting_container">
+          <label
+            for="personal_code_input"
+            class="personal_code_connecting_paragraph"
+            >Enter your friend's code</label
+          >
+          <div class="personal_code_connecting_input_container">
+            <input
+              type="text"
+              class="personal_code_input"
+              id="personal_code_input"
+            />
+          </div>
+          <div class="personal_code_connecting_buttons_container">
+            <button class="connecting_button" id="personal_code_chat_button">
+              <img
+                src="./utils/images/chatButton.png"
+                alt=""
+                class="connecting_buttons_image"
+              />
             </button>
-            <div class="messages_container" id="messages_container">
-
-                <div class="finish_chat_button_container display_none" id="finish_chat_button_container">
-                    <button class="call_button_large" id="finish_chat_call_button">
-                        <img src="./utils/images/hangUp.png" alt="">
-                    </button>
-                </div>
-            </div>
-            <div class="new_message_container display_none" id="new_message">
-                <input type="text" class="new_message_input" id="new_message_input"
-                    placeholder="Type your message here...">
-                <button class="send_message_button" id="send_message_button">
-                    <img class="send_message_button_image" src="./utils/images/sendMessageButton.png" alt="">
-                </button>
-            </div>
+            <button class="connecting_button" id="end_connection_button">
+              <img
+                src="./utils/images/endConnectionButton.png"
+                alt=""
+                class="connecting_buttons_image"
+              />
+            </button>
+          </div>
+          <div class="dashboard_blur display_none" id="dashboard_blur"></div>
         </div>
-        <div id="dialog"></div>
+      </div>
+
+      <!-- Video Container-->
+
+      <div class="call_container">
+        <div class="videos_container">
+          <div id="video_placeholder" class="videos_placeholder">
+            <img src="./utils/images/logo.png" alt="" />
+          </div>
+          <video
+            class="remote_video display_none"
+            autoplay
+            id="remote_video"
+          ></video>
+          <div class="local_video_container">
+            <video class="local_video" id="local_video" muted autoplay></video>
+          </div>
+          <div class="call_buttons_container display_none" id="call_buttons">
+            <button class="call_button_small" id="mic_button">
+              <img src="./utils/images/mic.png" id="mic_button_image" alt="" />
+            </button>
+            <button class="call_button_small" id="camera_button">
+              <img
+                src="./utils/images/camera.png"
+                id="camera_button_image"
+                alt=""
+              />
+            </button>
+            <button class="call_button_large" id="hang_up_button">
+              <img src="./utils/images/hangUp.png" alt="" />
+            </button>
+            <button class="call_button_small" id="screen_sharing_button">
+              <img src="./utils/images/switchCameraScreenSharing.png" alt="" />
+            </button>
+            <button class="call_button_small" id="start_recording_button">
+              <img src="./utils/images/recordingStart.png" alt="" />
+            </button>
+          </div>
+
+          <div
+            class="video_recording_buttons_container display_none"
+            id="video_recording_buttons"
+          >
+            <button id="pause_recording_button">
+              <img src="./utils/images/pause.png" alt="" />
+            </button>
+            <button id="resume_recording_button" class="display_none">
+              <img src="./utils/images/resume.png" alt="" />
+            </button>
+            <button id="stop_recording_button">Stop Recording</button>
+          </div>
+        </div>
+      </div>
+
+      <!--Messages Container for Chat-->
+
+      <div class="messenger_container">
+        <button
+          class="connecting_button display_none"
+          id="personal_code_video_button"
+        >
+          <img
+            src="./utils/images/videoButton.png"
+            alt=""
+            class="connecting_buttons_image"
+          />
+        </button>
+        <div class="messages_container" id="messages_container">
+          <div
+            class="finish_chat_button_container display_none"
+            id="finish_chat_button_container"
+          >
+            <button class="call_button_large" id="finish_chat_call_button">
+              <img src="./utils/images/hangUp.png" alt="" />
+            </button>
+          </div>
+        </div>
+        <div class="new_message_container display_none" id="new_message">
+          <input
+            type="text"
+            class="new_message_input"
+            id="new_message_input"
+            placeholder="Type your message here..."
+          />
+          <button class="send_message_button" id="send_message_button">
+            <img
+              class="send_message_button_image"
+              src="./utils/images/sendMessageButton.png"
+              alt=""
+            />
+          </button>
+        </div>
+      </div>
+      <div id="dialog"></div>
     </div>
 
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="./js/recordingUtils.js" type="module"></script>
+    <script src="./js/elements.js" type="module"></script>
+    <script src="./js/constants.js" type="module"></script>
+    <script src="./js/ui.js" type="module"></script>
+    <script src="./js/wss.js" type="module"></script>
+    <script src="./js/store.js" type="module"></script>
+    <script src="./js/webRTCHandler.js" type="module"></script>
 
-    <script src='/socket.io/socket.io.js'></script>
-    <script src='./js/recordingUtils.js' type="module"></script>
-    <script src='./js/elements.js' type="module"></script>
-    <script src='./js/constants.js' type="module"></script>
-    <script src='./js/ui.js' type="module"></script>
-    <script src='./js/wss.js' type="module"></script>
-    <script src='./js/store.js' type="module"></script>
-    <script src='./js/webRTCHandler.js' type="module"></script>
-
-    <script src='./js/main.js' type="module"></script>
-</body>
-
+    <script src="./js/main.js" type="module"></script>
+  </body>
 </html>

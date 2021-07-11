@@ -1,155 +1,172 @@
-import * as constants from './constants.js';
+/**
+ * File : elements.js
+ * Author : Aakanksha Baijal
+ * Date : July 2021
+ * Project : Microsoft Teams Clone
+ *
+ * Summary of File:
+ *      This file contains code which creates the dialog boxes when
+ *      connection / video call request is sent, and the chat messages.
+ *      During outgoing call, dialog box only shows 'Calling'.
+ *      During incoming call, user has the option to accept or reject the call.
+ *      If incorrect personal code was entered,the dialog box shows that
+ *      'Callee not found, Please check personal code'.
+ *      Incoming chat message is created in the getLeftMessage() function and
+ *      Outgoing chat message is created in the getRightMessage() function.
+ *
+ */
 
-export const getIncomingCallDialog = (callTypeInfo, acceptCallHandler, rejectCallHandler) => {
-    console.log('getting incoming call dialog');
+import * as constants from "./constants.js";
 
-    const dialog = document.createElement('div');
-    dialog.classList.add('dialog_wrapper');
-    const dialogContent = document.createElement('div');
-    dialogContent.classList.add('dialog_content');
+/* Dialog when incoming call or connection request, with the option to accept or reject*/
 
-    dialog.appendChild(dialogContent);
-    const title = document.createElement('p');
-    title.classList.add('dialog_title');
-    if(callTypeInfo === constants.callType.VIDEO_PERSONAL_CODE) {
-        title.innerHTML = `Incoming ${callTypeInfo} Call`;
-    }
-    else {
-        title.innerHTML = "Incoming Request";
-    }
-    
+export const getIncomingCallDialog = (
+  callTypeInfo,
+  acceptCallHandler,
+  rejectCallHandler
+) => {
+  console.log("getting incoming call dialog");
 
-    const imageContainer = document.createElement('div');
-    imageContainer.classList.add('dialog_image_container');
-    const image = document.createElement('img');
+  const dialog = document.createElement("div");
+  dialog.classList.add("dialog_wrapper");
+  const dialogContent = document.createElement("div");
+  dialogContent.classList.add("dialog_content");
 
-    image.src = "./utils/images/dialogAvatar.png";
-    imageContainer.appendChild(image);
+  /* First the connection request is sent. Once two users are connected,
+   * only then option for video call is available.
+   */
 
-    const buttonContainer = document.createElement('div');
-    buttonContainer.classList.add('dialog_button_container');
+  dialog.appendChild(dialogContent);
+  const title = document.createElement("p");
+  title.classList.add("dialog_title");
+  if (callTypeInfo === constants.callType.VIDEO_PERSONAL_CODE) {
+    title.innerHTML = `Incoming ${callTypeInfo} Call`;
+  } else {
+    title.innerHTML = "Incoming Request";
+  }
 
-    const acceptCallButton = document.createElement('button');
-    acceptCallButton.classList.add('dialog_accept_call_button');
-    const acceptCallImg = document.createElement('img');
-    acceptCallImg.classList.add('dialog_button_image');
-    acceptCallImg.src = "./utils/images/acceptCall.png";
-    acceptCallButton.append(acceptCallImg);
-    buttonContainer.appendChild(acceptCallButton);
+  /*Standard Avatar as image in the dialog box*/
+  const imageContainer = document.createElement("div");
+  imageContainer.classList.add("dialog_image_container");
+  const image = document.createElement("img");
 
-    const rejectCallButton = document.createElement('button');
-    rejectCallButton.classList.add('dialog_reject_call_button');
-    const rejectCallImg = document.createElement('img');
-    rejectCallImg.classList.add('dialog_button_image');
-    rejectCallImg.src = "./utils/images/rejectCall.png";
-    rejectCallButton.append(rejectCallImg);
-    buttonContainer.appendChild(rejectCallButton);
+  image.src = "./utils/images/dialogAvatar.png";
+  imageContainer.appendChild(image);
 
+  /* buttonContainer contains the accept and reject buttons*/
+  const buttonContainer = document.createElement("div");
+  buttonContainer.classList.add("dialog_button_container");
 
-    dialogContent.appendChild(title);
-    dialogContent.appendChild(imageContainer);
-    dialogContent.appendChild(buttonContainer);
+  const acceptCallButton = document.createElement("button");
+  acceptCallButton.classList.add("dialog_accept_call_button");
+  const acceptCallImg = document.createElement("img");
+  acceptCallImg.classList.add("dialog_button_image");
+  acceptCallImg.src = "./utils/images/acceptCall.png";
+  acceptCallButton.append(acceptCallImg);
+  buttonContainer.appendChild(acceptCallButton);
 
-    acceptCallButton.addEventListener('click', () => {
-        acceptCallHandler();
-    });
-    rejectCallButton.addEventListener('click', () => {
-        rejectCallHandler();
-    });
+  const rejectCallButton = document.createElement("button");
+  rejectCallButton.classList.add("dialog_reject_call_button");
+  const rejectCallImg = document.createElement("img");
+  rejectCallImg.classList.add("dialog_button_image");
+  rejectCallImg.src = "./utils/images/rejectCall.png";
+  rejectCallButton.append(rejectCallImg);
+  buttonContainer.appendChild(rejectCallButton);
 
+  dialogContent.appendChild(title);
+  dialogContent.appendChild(imageContainer);
+  dialogContent.appendChild(buttonContainer);
 
-    return dialog;
+  acceptCallButton.addEventListener("click", () => {
+    acceptCallHandler();
+  });
+  rejectCallButton.addEventListener("click", () => {
+    rejectCallHandler();
+  });
+
+  return dialog;
 };
 
+/*getCallingDialog creates a dialog when we are calling the other user */
 export const getCallingDialog = (rejectCallHandler) => {
-    const dialog = document.createElement('div');
-    dialog.classList.add('dialog_wrapper');
-    const dialogContent = document.createElement('div');
-    dialogContent.classList.add('dialog_content');
+  const dialog = document.createElement("div");
+  dialog.classList.add("dialog_wrapper");
+  const dialogContent = document.createElement("div");
+  dialogContent.classList.add("dialog_content");
 
-    dialog.appendChild(dialogContent);
-    const title = document.createElement('p');
-    title.classList.add('dialog_title');
-    title.innerHTML = `Calling`;
+  dialog.appendChild(dialogContent);
+  const title = document.createElement("p");
+  title.classList.add("dialog_title");
+  title.innerHTML = `Calling`;
 
-    const imageContainer = document.createElement('div');
-    imageContainer.classList.add('dialog_image_container');
-    const image = document.createElement('img');
+  const imageContainer = document.createElement("div");
+  imageContainer.classList.add("dialog_image_container");
+  const image = document.createElement("img");
 
-    image.src = "./utils/images/dialogAvatar.png";
-    imageContainer.appendChild(image);
+  image.src = "./utils/images/dialogAvatar.png";
+  imageContainer.appendChild(image);
 
-    const buttonContainer = document.createElement('div');
-    buttonContainer.classList.add('dialog_button_container');
+  const buttonContainer = document.createElement("div");
+  buttonContainer.classList.add("dialog_button_container");
 
-    // const hangUpCallButton = document.createElement('button');
-    // hangUpCallButton.classList.add('dialog_reject_call_button');
-    // const hangUpCallImg = document.createElement('img');
-    // hangUpCallImg.classList.add('dialog_button_image');
-    // hangUpCallImg.src = "./utils/images/rejectCall.png";
-    // hangUpCallButton.append(hangUpCallImg);
-    // buttonContainer.appendChild(hangUpCallButton);
+  dialogContent.appendChild(title);
+  dialogContent.appendChild(imageContainer);
+  dialogContent.appendChild(buttonContainer);
 
-
-
-    dialogContent.appendChild(title);
-    dialogContent.appendChild(imageContainer);
-    dialogContent.appendChild(buttonContainer);
-
-    // hangUpCallButton.addEventListener('click', () => {
-    //     rejectCallHandler();
-    // });
-    return dialog;
-}
-
-export const getInfoDialog = (dialogTitle, dialogDescription) => {
-    const dialog = document.createElement('div');
-    dialog.classList.add('dialog_wrapper');
-    const dialogContent = document.createElement('div');
-    dialogContent.classList.add('dialog_content');
-
-    dialog.appendChild(dialogContent);
-
-    const title = document.createElement('p');
-    title.classList.add('dialog_title');
-    title.innerHTML = dialogTitle;
-
-    const imageContainer = document.createElement('div');
-    imageContainer.classList.add('dialog_image_container');
-    const image = document.createElement('img');
-
-    image.src = "./utils/images/dialogAvatar.png";
-    imageContainer.appendChild(image);
-
-    const description = document.createElement('p');
-    description.classList.add('dialog_description');
-    description.innerHTML = dialogDescription;
-
-    dialogContent.appendChild(title);
-    dialogContent.appendChild(imageContainer);
-    dialogContent.appendChild(description);
-
-    return dialog;
+  return dialog;
 };
 
+/* getInfoDialog creates the Dialog when incorrect personal code is entered */
+export const getInfoDialog = (dialogTitle, dialogDescription) => {
+  const dialog = document.createElement("div");
+  dialog.classList.add("dialog_wrapper");
+  const dialogContent = document.createElement("div");
+  dialogContent.classList.add("dialog_content");
+
+  dialog.appendChild(dialogContent);
+
+  const title = document.createElement("p");
+  title.classList.add("dialog_title");
+  title.innerHTML = dialogTitle;
+
+  const imageContainer = document.createElement("div");
+  imageContainer.classList.add("dialog_image_container");
+  const image = document.createElement("img");
+
+  image.src = "./utils/images/dialogAvatar.png";
+  imageContainer.appendChild(image);
+
+  const description = document.createElement("p");
+  description.classList.add("dialog_description");
+  description.innerHTML = dialogDescription;
+
+  dialogContent.appendChild(title);
+  dialogContent.appendChild(imageContainer);
+  dialogContent.appendChild(description);
+
+  return dialog;
+};
+
+/* getLeftMessage is for creating the boxes of incoming messages and appending it into the messages container */
 export const getLeftMessage = (message) => {
-    const messageContainer = document.createElement('div');
-    messageContainer.classList.add('message_left_container');
-    const messageParagraph = document.createElement('p');
-    messageParagraph.classList.add('message_left_paragraph');
-    messageParagraph.innerHTML = message;
-    messageContainer.appendChild(messageParagraph);
+  const messageContainer = document.createElement("div");
+  messageContainer.classList.add("message_left_container");
+  const messageParagraph = document.createElement("p");
+  messageParagraph.classList.add("message_left_paragraph");
+  messageParagraph.innerHTML = message;
+  messageContainer.appendChild(messageParagraph);
 
-    return messageContainer;
-}
+  return messageContainer;
+};
 
+/* getRighttMessage is for creating the boxes of outgoing messages and appending it into the messages container */
 export const getRightMessage = (message) => {
-    const messageContainer = document.createElement('div');
-    messageContainer.classList.add('message_right_container');
-    const messageParagraph = document.createElement('p');
-    messageParagraph.classList.add('message_right_paragraph');
-    messageParagraph.innerHTML = message;
-    messageContainer.appendChild(messageParagraph);
+  const messageContainer = document.createElement("div");
+  messageContainer.classList.add("message_right_container");
+  const messageParagraph = document.createElement("p");
+  messageParagraph.classList.add("message_right_paragraph");
+  messageParagraph.innerHTML = message;
+  messageContainer.appendChild(messageParagraph);
 
-    return messageContainer;
-}
+  return messageContainer;
+};

@@ -1,3 +1,5 @@
+/* Removing all default formatting*/
+
 button {
   background: transparent;
   box-shadow: 0px 0px 0px transparent;
@@ -162,6 +164,8 @@ body {
   padding: 0 20px;
 }
 
+/*personal_code_connecting_buttons_container contains the 'connect' and 'end' buttons*/
+
 .personal_code_connecting_buttons_container {
   margin-top: 10%;
   display: flex;
@@ -179,10 +183,12 @@ body {
   transition: 0.5s;
 }
 
+/*This is for the Connect Button*/
 #personal_code_chat_button {
   width: 50%;
 }
 
+/*The Video Call button will be visible once the connection is established*/
 #personal_code_video_button {
   width: 51%;
   padding: 2%;
@@ -196,6 +202,7 @@ body {
   height: auto;
 }
 
+/*Messeges Container for Chat*/
 .new_message_container {
   position: relative;
 }
@@ -226,6 +233,8 @@ body {
   overflow-y: scroll;
 }
 
+/*message_left is for incoming messages*/
+
 .message_left_container {
   display: flex;
   flex-direction: column;
@@ -243,6 +252,8 @@ body {
   margin-bottom: 2.5%;
   margin-right: 2.5%;
 }
+
+/*message_right is for outgoing messages */
 
 .message_right_container {
   display: flex;
@@ -280,6 +291,7 @@ body {
   max-height: 100%;
 }
 
+/*videos_container is the main container for displaying the local and remote streams*/
 .videos_container {
   position: relative;
   height: calc(100% - 70px);
@@ -323,6 +335,8 @@ body {
   height: 100%;
 }
 
+/*call_buttons_container is for mic, camera, screen share, record, and hang up buttons*/
+
 .call_buttons_container {
   position: absolute;
   width: 395px;
@@ -360,6 +374,10 @@ body {
   background: #fc5d5b;
   transition: 0.3s;
 }
+
+/*Dialogs are created when connection request send to other participant,
+ *getting option to accept or reject a call, or an incorrect code is entered in the personal_code_input
+ */
 
 .dialog_wrapper {
   position: fixed;
@@ -441,6 +459,7 @@ body {
   max-height: 100%;
 }
 
+/*Dashboard is blurred when we have outgoing or incoming connection request*/
 .dashboard_blur {
   position: absolute;
   width: 100%;
