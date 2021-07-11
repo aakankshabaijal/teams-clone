@@ -5,10 +5,11 @@
  * Project : Microsoft Teams Clone
  *
  * Summary of File:
- *      This file contains the client side code for establishing the connection between two peers.
+ *      This file contains the client side code for establishing the connection between two peers,
+ *      which includes taking the input of personal code, sending requests through webRTC, sending
+ *      messages, and logic for all the buttons present during a video call (mic, camera, screen share,
+ *      recording, and hang up).
  *      socket.io is used for connection between the client and server.
- *
- *
  *
  */
 
@@ -26,9 +27,8 @@ wss.registerSocketEvents(socket);
 /*  If the camera is detected, user can see their camera feed in the local preview */
 webRTCHandler.getLocalPreview();
 
-/*  The purpose below is to copy the personal code of the user to the clipboard 
-    when the copy button is clicked
-*/
+/*  The purpose below is to copy the personal code of the user to the clipboard when the copy button is clicked
+ */
 const personalCodeCopyButton = document.getElementById(
   "personal_code_copy_button"
 );
@@ -68,17 +68,15 @@ personalCodeVideoButton.addEventListener("click", () => {
 });
 
 endConnectionButton.addEventListener("click", () => {
-  console.log("end connection button clicked");
   webRTCHandler.handleHangUp();
 });
 
-/*  The buttons below are for buttons available during a video call,
+/*  The code below is for buttons available during a video call:
     1.mic on/off
     2.video on/off
     3.hang up video call
     4.screen sharing start/end
-    5.start recording
-    
+    5.start, pause, resume and stop recording 
 
  */
 
@@ -100,7 +98,11 @@ cameraButton.addEventListener("click", () => {
   ui.updateCameraButton(cameraEnabled);
 });
 
-/*
+/*  Since there is only one container for the local preview and one for the remote stream,
+    once user starts their screen share, their outgoing video stream is replaced by the
+    screen share stream. So now the other participant can only see the screen share, not 
+    the video. Once screen share has ended, the video stream is adeed back and users can
+    continue to communicate via video.
  */
 
 const switchForScreenSharingButton = document.getElementById(
@@ -111,13 +113,12 @@ switchForScreenSharingButton.addEventListener("click", () => {
   webRTCHandler.switchBetweenCameraAndScreenSharing(screenSharingActive);
 });
 
-// messenger
-
+/*  Code for sending messages via chat  */
 const newMessageInput = document.getElementById("new_message_input");
 newMessageInput.addEventListener("keydown", (event) => {
-  console.log("change occured");
   const key = event.key;
 
+  //when enter key is pressed, message will be sent
   if (key === "Enter") {
     webRTCHandler.sendMessageUsingDataChannel(event.target.value);
     ui.appendMessage(event.target.value, true);
@@ -133,8 +134,15 @@ sendMessageButton.addEventListener("click", () => {
   newMessageInput.value = "";
 });
 
-// recording
-
+/*  The recording feature is implemented below. Once the user starts recording,
+    there is option to pause or stop the recording. For one meeting, only one 
+    video file is generated, which contains everything that was present in 
+    the remote stream (video or screen share).
+    If recording is paused, there is option to resume or stop recording.
+    Once the recording is stopped, only then the file is generated which can be saved
+    locally by the user. Both users can record simultaneously and different files 
+    would be generated for each of them.
+ */
 const startRecordingButton = document.getElementById("start_recording_button");
 startRecordingButton.addEventListener("click", () => {
   recordingUtils.startRecording();
@@ -161,16 +169,14 @@ resumeRecordingButton.addEventListener("click", () => {
   ui.switchRecordingButtons();
 });
 
-// end call with hang up button
-
+// hangUpButton ends only the video call, but the chat still remains active
 const hangUpButton = document.getElementById("hang_up_button");
 hangUpButton.addEventListener("click", () => {
   webRTCHandler.onlyVideoHangUp();
-  //ui.videoCallEnded();
 });
 
+// hangUpChatButton ends the entire peer connection
 const hangUpChatButton = document.getElementById("finish_chat_call_button");
 hangUpChatButton.addEventListener("click", () => {
   webRTCHandler.handleHangUp();
-  //webRTCHandler.close
 });

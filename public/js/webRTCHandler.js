@@ -1,3 +1,17 @@
+/**
+ * File : webRTCHandler.js
+ * Author : Aakanksha Baijal
+ * Date : July 2021
+ * Project : Microsoft Teams Clone
+ *
+ * Summary of File:
+ *      This file contains all functions for creating and ending the peer connection between
+ *      two participants by using webRTC. The dataChannel is used for sending and receiving messages
+ *      through chat. First the two users have to send a connection request. Once they are connected,
+ *      chat and video call option is available. The chat is available even when the video call ends.
+ *      The chat is cleared only when the user ends the connection.
+ *
+ */
 import * as wss from "./wss.js";
 import * as constants from "./constants.js";
 import * as ui from "./ui.js";
@@ -27,12 +41,10 @@ export const getLocalPreview = () => {
     .getUserMedia(defaultConstraints)
     .then((stream) => {
       ui.updateLocalVideo(stream);
-      //ui.showVideoCallButtons();
       store.setCallState(constants.callState.CALL_AVAILABLE);
       store.setLocalStream(stream);
     })
     .catch((err) => {
-      console.log("error occured when trying to get access to camera");
       console.log(err);
     });
 };
@@ -47,20 +59,15 @@ const createPeerConnection = () => {
   peerConnection.ondatachannel = (event) => {
     const dataChannel = event.channel;
 
-    dataChannel.onopen = () => {
-      console.log("peer connection is ready to receive data channel messages");
-    };
+    dataChannel.onopen = () => {};
 
     dataChannel.onmessage = (event) => {
-      console.log("message came from data channel");
       const message = JSON.parse(event.data);
-
       ui.appendMessage(message);
     };
   };
 
   peerConnection.onicecandidate = (event) => {
-    console.log("getting ice candidates from stun server");
     if (event.candidate) {
       //send our ice candidates to other peer
       if (connectedUserDetails) {
@@ -75,17 +82,18 @@ const createPeerConnection = () => {
 
   peerConnection.onconnectionstatechange = (event) => {
     if (peerConnection.connectionState === "connected") {
-      console.log("successfully connected with other peer");
     }
   };
 
-  //receiving tracks
+  /**
+   * The purpose of code below is to receive the remote stream of other user
+   * and add audio and video tracks to the peer connection.
+   */
 
   const remoteStream = new MediaStream();
   store.setRemoteStream(remoteStream);
   ui.updateRemoteVideo(remoteStream);
 
-  //adding audio and video tracks to our stream
   peerConnection.ontrack = (event) => {
     remoteStream.addTrack(event.track);
   };
@@ -109,10 +117,8 @@ export const sendMessageUsingDataChannel = (message) => {
   dataChannel.send(stringifiedMessage);
 };
 
+/* Creating offer once user clicks on 'Connect' or 'Video Call' button */
 export const sendPreOffer = (callType, calleePersonalCode) => {
-  //console.log("pre offer function executed");
-  //console.log(callType);
-  //console.log(calleePersonalCode);
   connectedUserDetails = {
     callType,
     socketId: calleePersonalCode,
@@ -133,6 +139,9 @@ export const sendPreOffer = (callType, calleePersonalCode) => {
   }
 };
 
+/* If the other user is available then they will get the incoming call dialog
+    with the option to accept or reject the connection request
+*/
 export const handlePreOffer = (data) => {
   const { callType, callerSocketId } = data;
 
@@ -150,7 +159,6 @@ export const handlePreOffer = (data) => {
 
   store.setCallState(constants.callState.CALL_UNAVAILABLE);
 
-  console.log(callerSocketId);
   if (
     callType === constants.callType.CHAT_PERSONAL_CODE ||
     callType === constants.callType.VIDEO_PERSONAL_CODE
@@ -160,13 +168,11 @@ export const handlePreOffer = (data) => {
 };
 
 const acceptCallHandler = () => {
-  console.log("call accepted");
   createPeerConnection();
   sendPreOfferAnswer(constants.preOfferAnswer.CALL_ACCEPTED);
   ui.showCallElements(connectedUserDetails.callType);
 };
 const rejectCallHandler = () => {
-  console.log("call rejected");
   sendPreOfferAnswer();
   setIncomingCallsAvailable();
   sendPreOfferAnswer(constants.preOfferAnswer.CALL_REJECTED);
@@ -178,10 +184,9 @@ const callingDialogRejectCallHandler = () => {
   };
   closePeerConnectionAndResetState();
   wss.senduserHangedUp(data);
-
-  console.log("rejecting the call");
 };
 
+/* Personal code of two users exchanged */
 const sendPreOfferAnswer = (preOfferAnswer, callerSocketId = null) => {
   const socketId = callerSocketId
     ? callerSocketId
@@ -197,8 +202,6 @@ const sendPreOfferAnswer = (preOfferAnswer, callerSocketId = null) => {
 
 export const handlePreOfferAnswer = (data) => {
   const { preOfferAnswer } = data;
-  console.log("pre offer answer came");
-  console.log(data);
   ui.removeAllDialogs();
 
   if (preOfferAnswer === constants.preOfferAnswer.CALLEE_NOT_FOUND) {
@@ -252,21 +255,20 @@ export const handleWebRTCOffer = async (data) => {
 };
 
 export const handleWebRTCAnswer = async (data) => {
-  console.log("handling webRTC answer");
   await peerConnection.setRemoteDescription(data.answer);
 };
 
 export const handleWebRTCCandidate = async (data) => {
-  console.log("handling incoming webRTC candidates");
   try {
     await peerConnection.addIceCandidate(data.candidate);
-  } catch (err) {
-    //console.error('error occured when trying to add received ice candidate',
-    //err);
-  }
+  } catch (err) {}
 };
 
 let screenSharingStream;
+
+/* Once the screen sharing begins, the local video stream is 
+    replaced by screen sharing stream
+*/
 
 export const switchBetweenCameraAndScreenSharing = async (
   screenSharingActive
@@ -291,7 +293,6 @@ export const switchBetweenCameraAndScreenSharing = async (
     store.setScreenSharingActive(!screenSharingActive);
     ui.updateLocalVideo(localStream);
   } else {
-    console.log("switching for screen sharing");
     try {
       screenSharingStream = await navigator.mediaDevices.getDisplayMedia({
         video: true,
@@ -323,10 +324,14 @@ export const switchBetweenCameraAndScreenSharing = async (
   }
 };
 
-// end call with hang up
+/**
+ * The purpose of the function below is to remove the audio and video streams
+ * from the peer connection when the user hangs up the video call. The peer
+ * connection remains active so that users can still communicate via chat.
+ *
+ */
 
 export const onlyVideoHangUp = () => {
-  //const remoteStream = store.getState().getVideoTracks()
   const data = {
     connectedUserSocketId: connectedUserDetails.socketId,
   };
@@ -345,7 +350,6 @@ export const onlyVideoHangUp = () => {
 };
 
 export const handleHangUp = () => {
-  console.log("finishing the call");
   if (connectedUserDetails) {
     const data = {
       connectedUserSocketId: connectedUserDetails.socketId,
@@ -356,18 +360,14 @@ export const handleHangUp = () => {
   closePeerConnectionAndResetState();
 };
 
-export const handleConnectedUserHangedUp = () => {
-  console.log("connected peer hanged up");
+export const handleConnectedUserHangedUp = () => {};
 
-  //not able to exceute this line
-  //if(connectedUserDetails.callType === constants.callType.CHAT_PERSONAL_CODE) {
-  //closePeerConnectionAndResetState();
-  //}
-  //closePeerConnectionAndResetState();
-};
+/**
+ * The funtion below ends the peer connection and resets the state for both users
+ * so that they are ready to form peer connection with any other user.
+ */
 
 export const closePeerConnectionAndResetState = () => {
-  console.log("close peer connection and reset state");
   if (peerConnection) {
     peerConnection.close();
     peerConnection = null;

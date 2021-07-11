@@ -11,22 +11,18 @@
  *      During incoming call, user has the option to accept or reject the call.
  *      If incorrect personal code was entered,the dialog box shows that
  *      'Callee not found, Please check personal code'.
- *      Incoming chat message is created in the getLeftMessage() function and
- *      Outgoing chat message is created in the getRightMessage() function.
  *
  */
 
 import * as constants from "./constants.js";
 
-/* Dialog when incoming call or connection request, with the option to accept or reject*/
+/* Dialog when incoming call or connection request, with the option to accept or reject */
 
 export const getIncomingCallDialog = (
   callTypeInfo,
   acceptCallHandler,
   rejectCallHandler
 ) => {
-  console.log("getting incoming call dialog");
-
   const dialog = document.createElement("div");
   dialog.classList.add("dialog_wrapper");
   const dialogContent = document.createElement("div");
@@ -45,7 +41,7 @@ export const getIncomingCallDialog = (
     title.innerHTML = "Incoming Request";
   }
 
-  /*Standard Avatar as image in the dialog box*/
+  /* Standard Avatar as image in the dialog box */
   const imageContainer = document.createElement("div");
   imageContainer.classList.add("dialog_image_container");
   const image = document.createElement("img");
@@ -53,7 +49,7 @@ export const getIncomingCallDialog = (
   image.src = "./utils/images/dialogAvatar.png";
   imageContainer.appendChild(image);
 
-  /* buttonContainer contains the accept and reject buttons*/
+  /* buttonContainer contains the accept and reject buttons */
   const buttonContainer = document.createElement("div");
   buttonContainer.classList.add("dialog_button_container");
 
@@ -87,7 +83,7 @@ export const getIncomingCallDialog = (
   return dialog;
 };
 
-/*getCallingDialog creates a dialog when we are calling the other user */
+/* getCallingDialog creates a dialog when we are calling the other user */
 export const getCallingDialog = (rejectCallHandler) => {
   const dialog = document.createElement("div");
   dialog.classList.add("dialog_wrapper");
@@ -147,7 +143,7 @@ export const getInfoDialog = (dialogTitle, dialogDescription) => {
   return dialog;
 };
 
-/* getLeftMessage is for creating the boxes of incoming messages and appending it into the messages container */
+/* getLeftMessage is for creating the containers of incoming messages and appending it into the messages container */
 export const getLeftMessage = (message) => {
   const messageContainer = document.createElement("div");
   messageContainer.classList.add("message_left_container");
@@ -159,7 +155,7 @@ export const getLeftMessage = (message) => {
   return messageContainer;
 };
 
-/* getRighttMessage is for creating the boxes of outgoing messages and appending it into the messages container */
+/* getRighttMessage is for creating the containers of outgoing messages and appending it into the messages container */
 export const getRightMessage = (message) => {
   const messageContainer = document.createElement("div");
   messageContainer.classList.add("message_right_container");

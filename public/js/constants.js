@@ -12,7 +12,6 @@
  *      Additional constants are also used for determining if the call was accepted or rejected.
  *      If incorrect personal code was entered, the "CALLEE_NOT_FOUND" property is used.
  *
- *
  */
 
 export const callType = {
