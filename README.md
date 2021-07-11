@@ -16,6 +16,12 @@ I have used WebRTC and socket.io for establishing the connection between two use
 5. Recording can be paused and resumed during the video call
 6. Option to accept or reject incoming video call or connection request
 
+## Agile Methodology
+
+I worked on this project in 3 sprints - Design, Build and Adapt. I used Trello to divide and organize my tasks and streamline my workflow.
+
+[My Trello Board](https://trello.com/b/cHZxvdv8)
+
 ## Installation
 
 After installing, run the script to host the application on a local host
